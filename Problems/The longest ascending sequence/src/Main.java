@@ -6,7 +6,7 @@ class Main {
         int length = scanner.nextInt();
         int[] arr = new int[length];
 
-        for (int i = 0; i < length; i ++) {
+        for (int i = 0; i < length; i++) {
             arr[i] = scanner.nextInt();
         }
 
@@ -14,7 +14,7 @@ class Main {
         int currentSequence = 0;
         int currentNumber = -56;
 
-        for (int i = 0; i < length; i ++) {
+        for (int i = 0; i < length; i++) {
             if (currentNumber <= arr[i]) {
                 currentSequence += 1;
             } else {
