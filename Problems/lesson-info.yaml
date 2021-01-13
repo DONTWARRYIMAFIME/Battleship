@@ -35,3 +35,4 @@ content:
 - Throw a checked exception
 - Rotate a rectangle array
 - Return empty string when argument is null
+- Does an array contain N
