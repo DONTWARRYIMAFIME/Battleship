@@ -36,3 +36,7 @@ content:
 - Rotate a rectangle array
 - Return empty string when argument is null
 - Does an array contain N
+- Convert to bytes
+- Reverse input text
+- Count words
+- Interval

@@ -10,6 +10,7 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/Battleship/task" />
             <option value="$PROJECT_DIR$/Problems/A simple calculator" />
             <option value="$PROJECT_DIR$/Problems/Account and its owner" />
             <option value="$PROJECT_DIR$/Problems/Binary search" />
@@ -20,7 +21,9 @@
             <option value="$PROJECT_DIR$/Problems/Collatz conjecture" />
             <option value="$PROJECT_DIR$/Problems/Complex numbers" />
             <option value="$PROJECT_DIR$/Problems/Complex numbers (1)" />
+            <option value="$PROJECT_DIR$/Problems/Convert to bytes" />
             <option value="$PROJECT_DIR$/Problems/Converting and multiplying" />
+            <option value="$PROJECT_DIR$/Problems/Count words" />
             <option value="$PROJECT_DIR$/Problems/Decompose a math function" />
             <option value="$PROJECT_DIR$/Problems/Difference of times" />
             <option value="$PROJECT_DIR$/Problems/Does an array contain N" />
@@ -33,10 +36,12 @@
             <option value="$PROJECT_DIR$/Problems/Harry Potter" />
             <option value="$PROJECT_DIR$/Problems/Initializing an array of characters" />
             <option value="$PROJECT_DIR$/Problems/Initializing an array of integers" />
+            <option value="$PROJECT_DIR$/Problems/Interval" />
             <option value="$PROJECT_DIR$/Problems/Is between" />
             <option value="$PROJECT_DIR$/Problems/Preparing full name" />
             <option value="$PROJECT_DIR$/Problems/Profit" />
             <option value="$PROJECT_DIR$/Problems/Return empty string when argument is null" />
+            <option value="$PROJECT_DIR$/Problems/Reverse input text" />
             <option value="$PROJECT_DIR$/Problems/Rotate a rectangle array" />
             <option value="$PROJECT_DIR$/Problems/Snail" />
             <option value="$PROJECT_DIR$/Problems/Spiral" />
