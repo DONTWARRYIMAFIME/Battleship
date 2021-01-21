@@ -370,6 +370,288 @@ files:
         }
     }
   learner_created: false
+- name: src/battleship/Game.java
+  visible: true
+  text: |
+    package battleship;
+    import java.util.Scanner;
+
+    enum SHIP_TYPE {
+        Aircraft_Carrier(5, "Aircraft Carrier"),
+        Battleship(4, "Battleship"),
+        Submarine(3, "Submarine"),
+        Cruiser(3, "Cruiser"),
+        Destroyer(2, "Destroyer");
+
+        final int length;
+        final String name;
+
+        SHIP_TYPE(int length, String name) {
+            this.length = length;
+            this.name = name;
+        }
+
+        public int getLength() {
+            return length;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+    }
+
+    enum PLACE_STYLE {
+        Unknown,
+        Vertical,
+        Horizontal
+    }
+
+    public class Game {
+
+        private final int size = 11;
+        private final String[][] mat = new String[size][size];
+        private final Scanner scanner = new Scanner(System.in);
+
+        public Game() {
+            initBattleField(mat);
+            printBattleField(mat, true);
+
+            placeShip(SHIP_TYPE.Aircraft_Carrier);
+            placeShip(SHIP_TYPE.Battleship);
+            placeShip(SHIP_TYPE.Submarine);
+            placeShip(SHIP_TYPE.Cruiser);
+            placeShip(SHIP_TYPE.Destroyer);
+
+            System.out.println("The game starts!");
+            printBattleField(mat, false);
+
+            takeShot(mat);
+
+        }
+
+        public void initBattleField(String[][] mat) {
+            mat[0][0] = " ";
+
+            for (int i = 1; i < size; i++) {
+                mat[0][i] = Integer.toString(i);
+            }
+
+            for (int i = 1; i < size; i++) {
+                mat[i][0] = Character.toString('A' + i - 1);
+            }
+
+            for (int i = 1; i < size; i++) {
+                for (int j = 1; j < size; j++) {
+                    mat[i][j] = "~";
+                }
+            }
+        }
+
+        public void printBattleField(String[][] mat, boolean visible) {
+            for (int i = 0; i < size; i++) {
+                for (int j = 0; j < size; j++) {
+
+                    if (!visible && "O".equals(mat[i][j])) {
+                            System.out.print("~" + " ");
+                    } else {
+                        System.out.print(mat[i][j] + " ");
+                    }
+
+                }
+                System.out.println();
+            }
+        }
+
+        public void placeShip(SHIP_TYPE type) {
+            String errMsg = "";
+
+            String shipName = type.getName();
+            int shipLen = type.getLength();
+
+            System.out.format("Enter the coordinates of the %s (%d cells):\n", shipName, shipLen);
+
+            boolean placed = false;
+
+            while (!placed) {
+
+                String firstCoordinate  = scanner.next();
+                String secondCoordinate = scanner.next();
+
+                int firstX = parseX(firstCoordinate);
+                int firstY = parseY(firstCoordinate);
+
+                int secondX = parseX(secondCoordinate);
+                int secondY = parseY(secondCoordinate);
+
+                PLACE_STYLE style = firstX == secondX ?
+                        PLACE_STYLE.Vertical   : firstY == secondY ?
+                        PLACE_STYLE.Horizontal : PLACE_STYLE.Unknown;
+
+                int row = Math.min(firstY, secondY) - 'A' + 1;
+                int col = Math.min(firstX, secondX);
+
+                if ((style != PLACE_STYLE.Unknown)
+                        && (inRange(firstX, firstY))
+                        && (inRange(secondX, secondY))) {
+
+                    if (style == PLACE_STYLE.Horizontal) {
+                        if (Math.abs(firstX - secondX) + 1 == shipLen) {
+
+                            boolean empty = true;
+
+                            for (int i = 0; i < shipLen; i++) {
+                                if (!isEmpty(col + i, row)) {
+                                    empty = false;
+                                    break;
+                                }
+                            }
+
+                            if (empty) {
+                                for (int i = 0; i < shipLen; i++) {
+                                    mat[row][col + i] = "O";
+                                }
+
+                                placed = true;
+                            } else {
+                                errMsg = "Error! You placed it too close to another one. Try again:";
+                            }
+
+                        }
+                    } else if (style == PLACE_STYLE.Vertical) {
+                        if (Math.abs(firstY - secondY) + 1 == shipLen) {
+
+                            boolean empty = true;
+
+                            for (int i = 0; i < shipLen; i++) {
+                                if (!isEmpty(col, row + i)) {
+                                    empty = false;
+                                    break;
+                                }
+                            }
+
+                            if (empty) {
+                                for (int i = 0; i < shipLen; i++) {
+                                    mat[row + i][col] = "O";
+                                }
+
+                                placed = true;
+                            } else {
+                                errMsg = "Error! You placed it too close to another one. Try again:";
+                            }
+
+                        }
+                    }
+
+                    if (!placed) {
+                        if ("".equals(errMsg)) {
+                            errMsg = "Error! Wrong length of the Ship! Try again:";
+                        }
+                    } else {
+                        printBattleField(mat, true);
+                    }
+
+                } else {
+                    errMsg = "Error! Wrong ship location! Try again:";
+                }
+
+                if (!"".equals(errMsg)) {
+                    System.out.println(errMsg);
+                    errMsg = "";
+                }
+
+            }
+
+        }
+
+        public void takeShot(String[][] mat){
+            System.out.println("Take a shot!");
+
+            boolean shot = false;
+            while (!shot) {
+                String coordinate  = scanner.next();
+
+                int x = parseX(coordinate);
+                int y = parseY(coordinate);
+
+                if (inRange(x, y)) {
+
+                    String msg = "";
+                    y = y - 'A' + 1;
+
+                    switch (mat[y][x]) {
+                        case "~":
+                            msg = "You missed!";
+                            mat[y][x] = "M";
+                            break;
+                        case "O":
+                            msg = "You hit a ship!";
+                            mat[y][x] = "X";
+                            break;
+                    }
+
+                    shot = true;
+                    printBattleField(mat, false);
+
+                    System.out.println(msg);
+
+                    printBattleField(mat, true);
+
+                } else {
+                    System.out.println("Error! You entered the wrong coordinates! Try again:");
+                }
+            }
+        }
+
+        private boolean isEmpty(int x, int y) {
+            boolean empty = true;
+            for (int i = y - 1; i < y + 2; i++) {
+                for (int j = x - 1; j < x + 2; j++) {
+
+                    if ((i < 1 || i >= size)
+                        || (j < 1 || j >= size)) {
+                        continue;
+                    }
+
+                    if (!"~".equals(mat[i][j])) {
+                        empty = false;
+                        break;
+                    }
+                }
+                if (!empty) {
+                    break;
+                }
+            }
+
+            return empty;
+        }
+
+        private boolean inRange(int x, int y) {
+            return ((x >= 1 && x < size) && (y >= 'A' && y < 'A' + size));
+        }
+
+        private int parseX(String coordinate) throws StringIndexOutOfBoundsException {
+            int result = -1;
+
+            for (int i = size; i > 0; i--) {
+                if (coordinate.contains(Integer.toString(i))) {
+                    result = i;
+                    break;
+                }
+            }
+
+            return result;
+        }
+
+        private int parseY(String coordinate) throws StringIndexOutOfBoundsException {
+            return  coordinate.charAt(0);
+        }
+
+    }
+  learner_created: true
 feedback_link: https://hyperskill.org/projects/125/stages/666/implement#comment
-status: Unchecked
-record: -1
+status: Solved
+feedback:
+  message: Congratulations!
+  time: Wed, 20 Jan 2021 17:18:41 UTC
+record: 4
